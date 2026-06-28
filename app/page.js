@@ -3,7 +3,7 @@
 import { useState } from "react";
 import {
   ArrowRight, ArrowUpRight, Thermometer, Users2, LineChart,
-  Mail, Lock, Radio, CalendarRange, ShieldCheck, Gauge,
+  Mail, Lock, Radio, CalendarRange, ShieldCheck, Gauge, CheckCircle2,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
@@ -109,9 +109,12 @@ export default function App() {
       <div className="grain" />
       <div style={{ position: "relative", zIndex: 2 }}>
         <NavBar setPage={setPage} />
-        {page === "home" && <Home onOpenControl={() => setPage("control")} />}
+        {page === "home" && <Home setPage={setPage} />}
         {page === "control" && <ControlInfo onBack={() => setPage("home")} onEnter={() => setPage("soon")} />}
-        {page === "soon" && <ComingSoon onBack={() => setPage("control")} />}
+        {page === "soon" && <ComingSoon onBack={() => setPage("control")} setPage={setPage} />}
+        {page === "advies" && <AdviesInfo onBack={() => setPage("home")} setPage={setPage} />}
+        {page === "interim" && <InterimInfo onBack={() => setPage("home")} setPage={setPage} />}
+        {page === "contact" && <ContactPage onBack={() => setPage("home")} />}
         <SiteFooter />
       </div>
     </div>
@@ -132,12 +135,12 @@ function NavBar({ setPage }) {
           MVDiensten
         </span>
       </button>
-      <a href="mailto:info@mvdiensten.nl" style={{
+      <button onClick={() => setPage("contact")} style={{
         display: "flex", alignItems: "center", gap: 7, fontSize: 13.5, fontWeight: 600,
-        color: C.ink, padding: "9px 6px",
+        color: C.ink, padding: "9px 6px", background: "none", border: "none", cursor: "pointer",
       }}>
         Contact <ArrowUpRight size={14} />
-      </a>
+      </button>
     </header>
   );
 }
@@ -145,7 +148,7 @@ function NavBar({ setPage }) {
 // ---------------------------------------------------------------------------
 // HOME
 // ---------------------------------------------------------------------------
-function Home({ onOpenControl }) {
+function Home({ setPage }) {
   return (
     <main>
       {/* Hero with live-feeling dashboard preview */}
@@ -167,8 +170,7 @@ function Home({ onOpenControl }) {
             </h1>
             <p style={{ fontSize: 18, lineHeight: 1.7, color: "#4F4A3F", maxWidth: 440, margin: "0 0 0" }}>
               MVDiensten bouwt software en levert expertise voor hospitality met een of
-              meerdere F&B-outlets die hun operatie willen sturen in plaats van volgen.
-
+              meerdere F&amp;B-outlets die hun operatie willen sturen in plaats van volgen.
             </p>
           </div>
 
@@ -177,7 +179,7 @@ function Home({ onOpenControl }) {
         </div>
       </section>
 
-      {/* Service register — numbered tiles, sequence is meaningful (01 live, rest planned) */}
+      {/* Service register: numbered tiles, sequence is meaningful (01 live, rest planned) */}
       <section style={{ padding: "150px 56px 140px", maxWidth: 1140, margin: "0 auto" }}>
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 36, flexWrap: "wrap", gap: 8 }}>
           <h2 style={{ fontFamily: display, fontSize: 25, fontWeight: 600, color: C.ink, margin: 0, letterSpacing: "-0.01em" }}>
@@ -187,8 +189,8 @@ function Home({ onOpenControl }) {
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
-          {SERVICES.map((s, i) => (
-            <ServiceTile key={s.id} service={s} onClick={s.id === "control" ? onOpenControl : undefined} />
+          {SERVICES.map((s) => (
+            <ServiceTile key={s.id} service={s} onClick={() => setPage(s.id)} />
           ))}
         </div>
       </section>
@@ -289,7 +291,7 @@ function ServiceTile({ service, onClick }) {
 }
 
 // ---------------------------------------------------------------------------
-// MD CONTROL — info page
+// MD CONTROL - info page
 // ---------------------------------------------------------------------------
 function ControlInfo({ onBack, onEnter }) {
   return (
@@ -397,9 +399,248 @@ function FeatureRow({ num, title, text, icon: Icon, last }) {
 }
 
 // ---------------------------------------------------------------------------
-// COMING SOON — destination of the login button
+// SOURCING & CONCEPTING - info page
 // ---------------------------------------------------------------------------
-function ComingSoon({ onBack }) {
+function AdviesInfo({ onBack, setPage }) {
+  return (
+    <main style={{ maxWidth: 1140, margin: "0 auto", padding: "0 56px 140px" }}>
+      <div style={{ padding: "36px 0 0" }}>
+        <BackLink onClick={onBack} label="Alle modules" />
+      </div>
+
+      <div style={{ padding: "32px 0 56px", maxWidth: 640 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
+          <span style={{ width: 16, height: 1, background: C.grey, display: "inline-block" }} />
+          <span style={{ fontFamily: mono, fontSize: 11, color: C.grey, fontWeight: 500, letterSpacing: "0.07em", textTransform: "uppercase" }}>
+            02 · Consultancy · Gepland
+          </span>
+        </div>
+        <h1 style={{ fontFamily: display, fontSize: "clamp(36px, 4.2vw, 52px)", fontWeight: 600, color: C.ink, margin: "0 0 24px", letterSpacing: "-0.015em", lineHeight: 1.08 }}>
+          Sourcing &amp; Concepting
+        </h1>
+        <p style={{ fontSize: 17, lineHeight: 1.7, color: "#4F4A3F", margin: 0 }}>
+          Inkoop, marge en conceptontwikkeling voor hospitality-organisaties die meerdere
+          outlets aansturen. Praktijkkennis van de vloer, vertaald naar betere keuzes op kantoor.
+        </p>
+      </div>
+
+      <div>
+        <FeatureRow num="01" title="Inkoop met onderhandelingskracht"
+          text="Schaalvoordeel realiseren door inkoop te bundelen over outlets, zonder de lokale leverancier-relaties te verliezen die elke locatie nodig heeft."
+          icon={LineChart} />
+        <FeatureRow num="02" title="Marge zichtbaar maken"
+          text="Inzicht in waar marge weglekt, per outlet en per categorie, als basis voor scherpere keuzes in de kaart, de bar of de roomservice."
+          icon={Gauge} />
+        <FeatureRow num="03" title="Concepting dat standhoudt op de vloer"
+          text="Een concept dat alleen op papier werkt is geen concept. Vertaling naar werkbare processen voor elke outlet, groot of klein."
+          icon={CalendarRange} last />
+      </div>
+
+      <ContactCTA
+        title="Benieuwd wat dit voor uw organisatie betekent?"
+        subtitle="Een vrijblijvend gesprek begint met een paar vragen over uw huidige situatie."
+        setPage={setPage}
+      />
+    </main>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// INTERIM OPERATIONS - info page
+// ---------------------------------------------------------------------------
+function InterimInfo({ onBack, setPage }) {
+  return (
+    <main style={{ maxWidth: 1140, margin: "0 auto", padding: "0 56px 140px" }}>
+      <div style={{ padding: "36px 0 0" }}>
+        <BackLink onClick={onBack} label="Alle modules" />
+      </div>
+
+      <div style={{ padding: "32px 0 56px", maxWidth: 640 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
+          <span style={{ width: 16, height: 1, background: C.grey, display: "inline-block" }} />
+          <span style={{ fontFamily: mono, fontSize: 11, color: C.grey, fontWeight: 500, letterSpacing: "0.07em", textTransform: "uppercase" }}>
+            03 · Inzet op locatie · Gepland
+          </span>
+        </div>
+        <h1 style={{ fontFamily: display, fontSize: "clamp(36px, 4.2vw, 52px)", fontWeight: 600, color: C.ink, margin: "0 0 24px", letterSpacing: "-0.015em", lineHeight: 1.08 }}>
+          Interim Operations
+        </h1>
+        <p style={{ fontSize: 17, lineHeight: 1.7, color: "#4F4A3F", margin: 0 }}>
+          Tijdelijk operationeel leiderschap voor organisaties die snel iemand nodig hebben
+          die de vloer kent, bij verlof, vacatures of een piek die niet kan wachten.
+        </p>
+      </div>
+
+      <div>
+        <FeatureRow num="01" title="Direct operationeel inzetbaar"
+          text="Geen lange inwerkperiode. Ervaring op de vloer betekent meedraaien vanaf de eerste dienst."
+          icon={Users2} />
+        <FeatureRow num="02" title="Overbrugging zonder gat in de planning"
+          text="Voor de periode tussen vertrek en een nieuwe vaste kracht, of tijdens een piekperiode die de bestaande ploeg niet alleen kan dragen."
+          icon={CalendarRange} />
+        <FeatureRow num="03" title="Overdracht die blijft hangen"
+          text="Bij vertrek een heldere overdracht, zodat verbeteringen niet verdwijnen zodra de inzet stopt."
+          icon={ShieldCheck} last />
+      </div>
+
+      <ContactCTA
+        title="Op korte termijn iemand nodig?"
+        subtitle="Beschrijf de situatie, dan volgt snel een reactie of dit past."
+        setPage={setPage}
+      />
+    </main>
+  );
+}
+
+function ContactCTA({ title, subtitle, setPage }) {
+  return (
+    <div style={{
+      background: `linear-gradient(165deg, ${C.panelLight}, ${C.panel})`,
+      borderRadius: 16, padding: "44px 48px", display: "flex",
+      flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 24, marginTop: 72,
+      boxShadow: "0 20px 50px -20px rgba(19,33,31,0.3)",
+      border: "1px solid rgba(255,255,255,0.06)",
+    }}>
+      <div>
+        <div style={{ fontFamily: display, color: C.paper, fontSize: 22, fontWeight: 600, marginBottom: 7 }}>
+          {title}
+        </div>
+        <div style={{ color: "rgba(245,242,234,0.55)", fontSize: 14 }}>
+          {subtitle}
+        </div>
+      </div>
+      <button onClick={() => setPage("contact")} style={{
+        display: "flex", alignItems: "center", gap: 9, padding: "14px 26px", borderRadius: 99,
+        background: C.terracotta, border: "none", color: C.paper, fontSize: 14, fontWeight: 700, cursor: "pointer",
+        whiteSpace: "nowrap", boxShadow: "0 8px 20px -6px rgba(201,98,44,0.5)",
+      }}>
+        <Mail size={14} /> Neem contact op <ArrowRight size={14} />
+      </button>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// CONTACT - real form, ready to connect to a form backend (Formspree/Web3Forms)
+// ---------------------------------------------------------------------------
+function ContactPage({ onBack }) {
+  const [status, setStatus] = useState("idle"); // idle | sending | sent | error
+  const [form, setForm] = useState({ name: "", email: "", company: "", message: "" });
+
+  const update = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus("sending");
+    try {
+      // ---------------------------------------------------------------
+      // Vervang FORM_ENDPOINT door uw eigen Formspree- of Web3Forms-URL.
+      // Formspree: https://formspree.io/f/UW_FORM_ID
+      // Web3Forms: https://api.web3forms.com/submit (met access_key in body)
+      // ---------------------------------------------------------------
+      const FORM_ENDPOINT = "https://formspree.io/f/VERVANG_DIT_FORM_ID";
+      const res = await fetch(FORM_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (res.ok) {
+        setStatus("sent");
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  };
+
+  if (status === "sent") {
+    return (
+      <main style={{ maxWidth: 560, margin: "0 auto", padding: "140px 56px 160px", textAlign: "center" }}>
+        <div style={{
+          width: 52, height: 52, borderRadius: 14, background: C.greenSoft, margin: "0 auto 28px",
+          display: "flex", alignItems: "center", justifyContent: "center",
+        }}>
+          <CheckCircle2 size={22} color={C.green} />
+        </div>
+        <h1 style={{ fontFamily: display, fontSize: 28, fontWeight: 600, color: C.ink, margin: "0 0 14px", letterSpacing: "-0.01em" }}>
+          Bericht verstuurd
+        </h1>
+        <p style={{ fontSize: 15.5, lineHeight: 1.6, color: "#5F594C", margin: "0 0 32px" }}>
+          Er volgt op korte termijn een reactie.
+        </p>
+        <BackLink onClick={onBack} label="Terug naar de homepage" />
+      </main>
+    );
+  }
+
+  return (
+    <main style={{ maxWidth: 640, margin: "0 auto", padding: "0 56px 140px" }}>
+      <div style={{ padding: "36px 0 0" }}>
+        <BackLink onClick={onBack} label="Terug" />
+      </div>
+      <div style={{ padding: "24px 0 44px" }}>
+        <h1 style={{ fontFamily: display, fontSize: "clamp(30px, 3.6vw, 40px)", fontWeight: 600, color: C.ink, margin: "0 0 16px", letterSpacing: "-0.015em" }}>
+          Neem contact op
+        </h1>
+        <p style={{ fontSize: 16, lineHeight: 1.65, color: "#4F4A3F", margin: 0 }}>
+          Voor MD Control, Sourcing &amp; Concepting of Interim Operations: laat weten waar het
+          om gaat, dan volgt snel een reactie.
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} style={{
+        background: C.paperSoft, border: `1px solid ${C.border}`, borderRadius: 16,
+        padding: 32, display: "flex", flexDirection: "column", gap: 18,
+        boxShadow: "0 1px 2px rgba(19,33,31,0.04), 0 8px 20px -10px rgba(19,33,31,0.1)",
+      }}>
+        <FormField label="Naam">
+          <input required type="text" value={form.name} onChange={update("name")} style={inputStyle} />
+        </FormField>
+        <FormField label="E-mailadres">
+          <input required type="email" value={form.email} onChange={update("email")} style={inputStyle} />
+        </FormField>
+        <FormField label="Organisatie (optioneel)">
+          <input type="text" value={form.company} onChange={update("company")} style={inputStyle} />
+        </FormField>
+        <FormField label="Bericht">
+          <textarea required rows={5} value={form.message} onChange={update("message")} style={{ ...inputStyle, resize: "vertical", fontFamily: sans }} />
+        </FormField>
+
+        {status === "error" && (
+          <div style={{ fontSize: 13.5, color: C.terracotta, background: C.terracottaSoft, padding: "10px 14px", borderRadius: 8 }}>
+            Versturen is niet gelukt. Probeer het opnieuw of mail direct naar info@mvdiensten.nl.
+          </div>
+        )}
+
+        <button type="submit" disabled={status === "sending"} style={{
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 9, padding: "14px 26px",
+          borderRadius: 99, background: status === "sending" ? C.grey : C.terracotta, border: "none",
+          color: C.paper, fontSize: 14, fontWeight: 700, cursor: status === "sending" ? "default" : "pointer",
+          marginTop: 6,
+        }}>
+          {status === "sending" ? "Versturen…" : <>Versturen <ArrowRight size={14} /></>}
+        </button>
+      </form>
+    </main>
+  );
+}
+
+function FormField({ label, children }) {
+  return (
+    <label style={{ display: "flex", flexDirection: "column", gap: 7 }}>
+      <span style={{ fontSize: 12.5, fontWeight: 600, color: "#5F594C" }}>{label}</span>
+      {children}
+    </label>
+  );
+}
+
+const inputStyle = {
+  fontFamily: "inherit", fontSize: 14.5, padding: "11px 14px", borderRadius: 8,
+  border: `1px solid rgba(19,33,31,0.16)`, background: "#FFFFFF", color: "#13211F", outline: "none",
+};
+
+function ComingSoon({ onBack, setPage }) {
   return (
     <main style={{ maxWidth: 580, margin: "0 auto", padding: "140px 56px 160px", textAlign: "center" }}>
       <div style={{
@@ -417,12 +658,12 @@ function ComingSoon({ onBack }) {
         organisatie mee te testen? Neem contact op.
       </p>
       <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
-        <a href="mailto:info@mvdiensten.nl" style={{
+        <button onClick={() => setPage("contact")} style={{
           display: "flex", alignItems: "center", gap: 8, padding: "13px 24px", borderRadius: 99,
-          background: C.ink, color: C.paper, fontSize: 14, fontWeight: 600,
+          background: C.ink, color: C.paper, fontSize: 14, fontWeight: 600, border: "none", cursor: "pointer",
         }}>
           <Mail size={14} /> Neem contact op
-        </a>
+        </button>
         <BackLink onClick={onBack} label="Terug naar MD Control" />
       </div>
     </main>
