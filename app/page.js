@@ -1,10 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ArrowRight, ArrowUpRight, Thermometer, Users2, LineChart,
-  Mail, Radio, CalendarRange, ShieldCheck, Gauge, CheckCircle2,
+  Mail, Radio, CalendarRange, ShieldCheck, Gauge, CheckCircle2, Clock,
 } from "lucide-react";
+
+// ---------------------------------------------------------------------------
+// LAUNCH GATE
+// Zet op false om de site af te schermen met een "binnenkort" pagina.
+// Zet op true zodra de site echt live mag voor iedereen.
+// Tip: tijdens afscherming kun je de echte site zelf nog bekijken via
+// mvdiensten.nl?preview=mvd2026 (verander de code hieronder gerust).
+// ---------------------------------------------------------------------------
+const SITE_LIVE = false;
+const PREVIEW_CODE = "mvd2026";
+
 
 // ---------------------------------------------------------------------------
 // Design tokens
@@ -103,6 +114,34 @@ const OUTLET_PREVIEW = [
 // ---------------------------------------------------------------------------
 export default function App() {
   const [page, setPage] = useState("home"); // home | control | soon
+  const [unlocked, setUnlocked] = useState(SITE_LIVE);
+
+  useEffect(() => {
+    if (SITE_LIVE) return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("preview") === PREVIEW_CODE) {
+      setUnlocked(true);
+    }
+  }, []);
+
+  if (!unlocked) {
+    return (
+      <div style={{
+        fontFamily: sans, minHeight: "100vh", color: C.ink, position: "relative",
+        background: `
+          radial-gradient(ellipse 900px 600px at 15% -10%, rgba(61,92,82,0.07), transparent 60%),
+          radial-gradient(ellipse 700px 500px at 100% 20%, rgba(201,98,44,0.05), transparent 55%),
+          ${C.paper}
+        `,
+      }}>
+        {FONT_IMPORT}
+        <div className="grain" />
+        <div style={{ position: "relative", zIndex: 2 }}>
+          <Teaser />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{
@@ -831,5 +870,56 @@ function SiteFooter() {
         mvdiensten.nl
       </div>
     </footer>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// TEASER - shown to all visitors while SITE_LIVE is false
+// ---------------------------------------------------------------------------
+function Teaser() {
+  return (
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <header style={{ padding: "30px 56px" }}>
+        <span style={{ fontFamily: display, fontSize: 21, fontWeight: 600, color: C.ink, letterSpacing: "-0.01em" }}>
+          MVDiensten
+        </span>
+      </header>
+
+      <main style={{
+        flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
+        justifyContent: "center", textAlign: "center", padding: "40px 56px",
+      }}>
+        <div style={{
+          width: 52, height: 52, borderRadius: 14, background: `linear-gradient(165deg, ${C.panelLight}, ${C.panel})`,
+          marginBottom: 28, display: "flex", alignItems: "center", justifyContent: "center",
+          boxShadow: "0 14px 32px -12px rgba(19,33,31,0.3)",
+        }}>
+          <Clock size={22} color={C.terracotta} />
+        </div>
+        <div style={{
+          display: "inline-flex", alignItems: "center", gap: 8, fontFamily: mono, fontSize: 11.5, fontWeight: 500,
+          letterSpacing: "0.09em", color: C.green, marginBottom: 18,
+        }}>
+          <span style={{ width: 16, height: 1, background: C.green, display: "inline-block" }} />
+          BINNENKORT ONLINE
+        </div>
+        <h1 style={{
+          fontFamily: display, fontSize: "clamp(32px, 4.5vw, 48px)", fontWeight: 600, lineHeight: 1.1,
+          color: C.ink, margin: "0 0 18px", letterSpacing: "-0.015em", maxWidth: 640,
+        }}>
+          Eén overzicht. Elke outlet, elke dag.
+        </h1>
+        <p style={{ fontSize: 16.5, lineHeight: 1.65, color: "#4F4A3F", maxWidth: 440, margin: "0 0 0" }}>
+          MVDiensten werkt aan een nieuw platform voor hospitality-organisaties met meerdere
+          F&amp;B-outlets. Binnenkort meer.
+        </p>
+      </main>
+
+      <footer style={{ padding: "28px 56px", textAlign: "center" }}>
+        <div style={{ fontFamily: mono, fontSize: 12, color: C.grey }}>
+          info@mvdiensten.nl
+        </div>
+      </footer>
+    </div>
   );
 }
