@@ -167,7 +167,8 @@ function Home({ onOpenControl }) {
             </h1>
             <p style={{ fontSize: 18, lineHeight: 1.7, color: "#4F4A3F", maxWidth: 440, margin: "0 0 0" }}>
               MVDiensten bouwt software en levert expertise voor hospitality met een of
-              meerdere F&amp;B-outlets — om de operatie te sturen in plaats van te volgen.
+              meerdere F&B-outlets die hun operatie willen sturen in plaats van volgen.
+
             </p>
           </div>
 
