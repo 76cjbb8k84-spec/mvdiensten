@@ -3,7 +3,7 @@
 import { useState } from "react";
 import {
   ArrowRight, ArrowUpRight, Thermometer, Users2, LineChart,
-  Mail, Lock, Radio, CalendarRange, ShieldCheck, Gauge, CheckCircle2,
+  Mail, Radio, CalendarRange, ShieldCheck, Gauge, CheckCircle2,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
@@ -58,16 +58,24 @@ const FONT_IMPORT = (
 // ---------------------------------------------------------------------------
 const SERVICES = [
   {
-    id: "control",
+    id: "visit",
     code: "01",
-    name: "MD Control",
-    category: "Software",
-    line: "Taken, temperatuur en schoonmaak per outlet, automatisch ingepland en centraal gecontroleerd.",
+    name: "MD Visit",
+    category: "Mystery visits",
+    line: "Een onaangekondigde gast beoordeelt de outlet. U betaalt geen tarief, alleen de kosten.",
     status: "live",
   },
   {
-    id: "advies",
+    id: "control",
     code: "02",
+    name: "MD Control",
+    category: "Software",
+    line: "Taken, temperatuur en schoonmaak per outlet, automatisch ingepland en centraal gecontroleerd.",
+    status: "soon",
+  },
+  {
+    id: "advies",
+    code: "03",
     name: "Sourcing & Concepting",
     category: "Consultancy",
     line: "Inkoop, marge en conceptontwikkeling voor hospitality-organisaties met meerdere vestigingen.",
@@ -75,7 +83,7 @@ const SERVICES = [
   },
   {
     id: "interim",
-    code: "03",
+    code: "04",
     name: "Interim Operations",
     category: "Inzet op locatie",
     line: "Tijdelijk operationeel leiderschap voor organisaties die snel iemand nodig hebben die de vloer kent.",
@@ -112,6 +120,7 @@ export default function App() {
         {page === "home" && <Home setPage={setPage} />}
         {page === "control" && <ControlInfo onBack={() => setPage("home")} onEnter={() => setPage("soon")} />}
         {page === "soon" && <ComingSoon onBack={() => setPage("control")} setPage={setPage} />}
+        {page === "visit" && <VisitInfo onBack={() => setPage("home")} setPage={setPage} />}
         {page === "advies" && <AdviesInfo onBack={() => setPage("home")} setPage={setPage} />}
         {page === "interim" && <InterimInfo onBack={() => setPage("home")} setPage={setPage} />}
         {page === "contact" && <ContactPage onBack={() => setPage("home")} />}
@@ -185,7 +194,7 @@ function Home({ setPage }) {
           <h2 style={{ fontFamily: display, fontSize: 25, fontWeight: 600, color: C.ink, margin: 0, letterSpacing: "-0.01em" }}>
             Wat we bouwen en leveren
           </h2>
-          <span style={{ fontFamily: mono, fontSize: 12, color: C.grey }}>03 modules</span>
+          <span style={{ fontFamily: mono, fontSize: 12, color: C.grey }}>04 modules</span>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
@@ -304,9 +313,9 @@ function ControlInfo({ onBack, onEnter }) {
       <div style={{ display: "grid", gridTemplateColumns: "1.05fr 0.95fr", gap: 80, alignItems: "center", padding: "32px 0 88px" }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
-            <span style={{ width: 16, height: 1, background: C.terracotta, display: "inline-block" }} />
-            <span style={{ fontFamily: mono, fontSize: 11, color: C.terracotta, fontWeight: 500, letterSpacing: "0.07em", textTransform: "uppercase" }}>
-              01 · Software · Actief
+            <span style={{ width: 16, height: 1, background: C.grey, display: "inline-block" }} />
+            <span style={{ fontFamily: mono, fontSize: 11, color: C.grey, fontWeight: 500, letterSpacing: "0.07em", textTransform: "uppercase" }}>
+              02 · Software · Gepland
             </span>
           </div>
           <h1 style={{ fontFamily: display, fontSize: "clamp(36px, 4.2vw, 52px)", fontWeight: 600, color: C.ink, margin: "0 0 24px", letterSpacing: "-0.015em", lineHeight: 1.08 }}>
@@ -352,10 +361,10 @@ function ControlInfo({ onBack, onEnter }) {
       }}>
         <div>
           <div style={{ fontFamily: display, color: C.paper, fontSize: 22, fontWeight: 600, marginBottom: 7 }}>
-            Toegang voor locaties en beheerders
+            In ontwikkeling
           </div>
           <div style={{ color: "rgba(245,242,234,0.55)", fontSize: 14 }}>
-            Voor gebruikers met een actief MD Control-account.
+            Interesse om als eerste organisatie mee te testen zodra MD Control live gaat?
           </div>
         </div>
         <button onClick={onEnter} style={{
@@ -363,7 +372,7 @@ function ControlInfo({ onBack, onEnter }) {
           background: C.terracotta, border: "none", color: C.paper, fontSize: 14, fontWeight: 700, cursor: "pointer",
           whiteSpace: "nowrap", boxShadow: "0 8px 20px -6px rgba(201,98,44,0.5)",
         }}>
-          <Lock size={14} /> Inloggen <ArrowRight size={14} />
+          Meer weten <ArrowRight size={14} />
         </button>
       </div>
     </main>
@@ -399,6 +408,131 @@ function FeatureRow({ num, title, text, icon: Icon, last }) {
 }
 
 // ---------------------------------------------------------------------------
+// MD VISIT - info page
+// ---------------------------------------------------------------------------
+function VisitInfo({ onBack, setPage }) {
+  return (
+    <main style={{ maxWidth: 1140, margin: "0 auto", padding: "0 56px 140px" }}>
+      <div style={{ padding: "36px 0 0" }}>
+        <BackLink onClick={onBack} label="Alle modules" />
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1.05fr 0.95fr", gap: 80, alignItems: "center", padding: "32px 0 64px" }}>
+        <div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
+            <span style={{ width: 16, height: 1, background: C.terracotta, display: "inline-block" }} />
+            <span style={{ fontFamily: mono, fontSize: 11, color: C.terracotta, fontWeight: 500, letterSpacing: "0.07em", textTransform: "uppercase" }}>
+              01 · Mystery visits · Actief
+            </span>
+          </div>
+          <h1 style={{ fontFamily: display, fontSize: "clamp(32px, 3.8vw, 46px)", fontWeight: 600, color: C.ink, margin: "0 0 22px", letterSpacing: "-0.015em", lineHeight: 1.12 }}>
+            Geen tarief.<br />Alleen de kosten.
+          </h1>
+          <p style={{ fontSize: 17, lineHeight: 1.7, color: "#4F4A3F", maxWidth: 460, margin: 0 }}>
+            Een onaangekondigde gast bezoekt de outlet en levert een gedetailleerd rapport.
+            U dekt de kosten van de auditeur. Met MD Control is dat alles wat u betaalt.
+          </p>
+        </div>
+        <VisitScorePreview />
+      </div>
+
+      {/* Price USP — visually distinct from the regular feature rows */}
+      <div style={{
+        background: C.greenSoft, border: `1px solid rgba(61,92,82,0.25)`, borderRadius: 16,
+        padding: "32px 36px", marginBottom: 16,
+      }}>
+        <div style={{ display: "flex", gap: 24, alignItems: "flex-start", flexWrap: "wrap", marginBottom: 22 }}>
+          <div style={{
+            width: 46, height: 46, borderRadius: 12, background: C.green,
+            display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+          }}>
+            <Gauge size={20} color={C.paper} />
+          </div>
+          <div style={{ flex: 1, minWidth: 240 }}>
+            <div style={{ fontFamily: display, fontSize: 19, fontWeight: 600, color: C.ink, marginBottom: 8 }}>
+              Wat u betaalt: reis, verblijf, consumpties. Niets meer.
+            </div>
+            <p style={{ fontSize: 14.5, lineHeight: 1.65, color: "#4A4540", margin: 0, maxWidth: 560 }}>
+              Geen uurtarief, geen winstopslag, geen factuur voor het rapport zelf. Alleen de
+              werkelijke kosten van het bezoek: reiskosten, een overnachting als die nodig is, en
+              wat de auditeur ter plekke afneemt om de outlet als gast te beoordelen. De inzichten
+              die daaruit volgen, zijn voor de prijs van een gewone rekening.
+            </p>
+          </div>
+        </div>
+        <div style={{
+          background: "rgba(255,255,255,0.5)", borderRadius: 10, padding: "14px 18px",
+          fontSize: 13.5, lineHeight: 1.6, color: "#4A4540",
+        }}>
+          <strong style={{ color: C.ink }}>Bij een actief MD Control-account:</strong> uitsluitend de
+          kostprijs, zoals hierboven. <strong style={{ color: C.ink }}>Zonder MD Control:</strong> dezelfde
+          kosten, plus een vast bedrag van € 150 per bezoek.
+        </div>
+      </div>
+
+      <div>
+        <FeatureRow num="01" title="Onaangekondigd, dus eerlijk"
+          text="Het team weet niet wanneer het bezoek plaatsvindt. De beoordeling toont de dagelijkse praktijk, niet de dag dat iedereen extra zijn best doet."
+          icon={Users2} />
+        <FeatureRow num="02" title="Vanuit gastperspectief beoordeeld"
+          text="Service, hygiëne, sfeer en aandacht: precies de punten waarop een gast de outlet ook beoordeelt, alleen dan systematisch en herhaalbaar."
+          icon={ShieldCheck} />
+        <FeatureRow num="03" title="Helder rapport, geen vage indruk"
+          text="Een concreet rapport per bezoek, met scores en toelichting, zodat verbeterpunten direct zichtbaar zijn voor de locatie en het hoofdkantoor."
+          icon={Gauge} />
+        <FeatureRow num="04" title="Herhaalbaar over outlets"
+          text="Hetzelfde format voor elke locatie, zodat resultaten onderling vergelijkbaar zijn in plaats van losse momentopnames."
+          icon={CalendarRange} last />
+      </div>
+
+      <ContactCTA
+        title="Een eerste bezoek inplannen?"
+        subtitle="Eén outlet als proef, of meteen de hele organisatie: beide kan."
+        setPage={setPage}
+      />
+    </main>
+  );
+}
+
+function VisitScorePreview() {
+  const scores = [
+    { label: "Ontvangst", score: 8.5 },
+    { label: "Service", score: 7.8 },
+    { label: "Hygiëne", score: 9.2 },
+    { label: "Sfeer", score: 8.0 },
+  ];
+  return (
+    <div style={{
+      background: `linear-gradient(165deg, ${C.panelLight}, ${C.panel})`,
+      borderRadius: 16, padding: "26px 26px 22px", position: "relative",
+      boxShadow: "0 2px 4px rgba(19,33,31,0.06), 0 16px 32px -12px rgba(19,33,31,0.28), 0 40px 80px -30px rgba(19,33,31,0.35)",
+      border: "1px solid rgba(255,255,255,0.06)",
+    }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+        <span style={{ fontFamily: mono, fontSize: 10.5, color: "rgba(245,242,234,0.5)", letterSpacing: "0.07em" }}>
+          BEZOEKRAPPORT · BRASSERIE KADE 7
+        </span>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 13 }}>
+        {scores.map((s) => (
+          <div key={s.label} style={{ display: "flex", alignItems: "center", gap: 13 }}>
+            <span style={{ color: "#EDE9DD", fontSize: 13, flex: 1 }}>{s.label}</span>
+            <div style={{ width: 70, height: 5, borderRadius: 999, background: "rgba(245,242,234,0.1)", overflow: "hidden" }}>
+              <div style={{ width: `${s.score * 10}%`, height: "100%", borderRadius: 999, background: C.greenLight }} />
+            </div>
+            <span style={{ fontFamily: mono, fontSize: 11, color: "rgba(245,242,234,0.55)", width: 28, textAlign: "right" }}>{s.score}</span>
+          </div>
+        ))}
+      </div>
+      <div style={{ marginTop: 20, paddingTop: 16, borderTop: `1px solid ${C.borderDark}`, display: "flex", justifyContent: "space-between" }}>
+        <span style={{ fontFamily: mono, fontSize: 10.5, color: "rgba(245,242,234,0.4)" }}>Gemiddelde score 8.4</span>
+        <span style={{ fontFamily: mono, fontSize: 10.5, color: "rgba(245,242,234,0.4)" }}>onaangekondigd bezoek</span>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // SOURCING & CONCEPTING - info page
 // ---------------------------------------------------------------------------
 function AdviesInfo({ onBack, setPage }) {
@@ -412,7 +546,7 @@ function AdviesInfo({ onBack, setPage }) {
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
           <span style={{ width: 16, height: 1, background: C.grey, display: "inline-block" }} />
           <span style={{ fontFamily: mono, fontSize: 11, color: C.grey, fontWeight: 500, letterSpacing: "0.07em", textTransform: "uppercase" }}>
-            02 · Consultancy · Gepland
+            03 · Consultancy · Gepland
           </span>
         </div>
         <h1 style={{ fontFamily: display, fontSize: "clamp(36px, 4.2vw, 52px)", fontWeight: 600, color: C.ink, margin: "0 0 24px", letterSpacing: "-0.015em", lineHeight: 1.08 }}>
@@ -459,7 +593,7 @@ function InterimInfo({ onBack, setPage }) {
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
           <span style={{ width: 16, height: 1, background: C.grey, display: "inline-block" }} />
           <span style={{ fontFamily: mono, fontSize: 11, color: C.grey, fontWeight: 500, letterSpacing: "0.07em", textTransform: "uppercase" }}>
-            03 · Inzet op locatie · Gepland
+            04 · Inzet op locatie · Gepland
           </span>
         </div>
         <h1 style={{ fontFamily: display, fontSize: "clamp(36px, 4.2vw, 52px)", fontWeight: 600, color: C.ink, margin: "0 0 24px", letterSpacing: "-0.015em", lineHeight: 1.08 }}>
