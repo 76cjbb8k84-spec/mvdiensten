@@ -44,7 +44,7 @@ const FONT_IMPORT = (
   <style>{`
     @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap');
     * { box-sizing: border-box; }
-    html, body { margin: 0; }
+    html, body { margin: 0; max-width: 100%; overflow-x: hidden; }
     a { text-decoration: none; }
     button { font-family: inherit; }
     ::selection { background: ${C.terracotta}; color: white; }
@@ -60,6 +60,26 @@ const FONT_IMPORT = (
     @media (prefers-reduced-motion: reduce) {
       .tile, .feature-row { transition: none !important; }
       .tile:hover { transform: none; }
+    }
+
+    /* Responsive layout helpers */
+    .page-pad { padding-left: 56px; padding-right: 56px; }
+    .hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 80px; align-items: center; }
+    .services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .feature-row-inner { display: grid; grid-template-columns: auto 1fr; gap: 40px; align-items: center; }
+    .cta-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; }
+
+    @media (max-width: 900px) {
+      .page-pad { padding-left: 28px; padding-right: 28px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 36px; }
+      .services-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .feature-row-inner { grid-template-columns: 1fr; gap: 16px; }
+    }
+    @media (max-width: 540px) {
+      .services-grid { grid-template-columns: 1fr; }
+      .feature-row-inner { grid-template-columns: auto 1fr; gap: 16px; }
+      .cta-row { flex-direction: column; align-items: stretch; }
+      .cta-row button, .cta-row a { width: 100%; justify-content: center; }
     }
   `}</style>
 );
@@ -174,9 +194,9 @@ export default function App() {
 // ---------------------------------------------------------------------------
 function NavBar({ setPage }) {
   return (
-    <header style={{
+    <header className="page-pad" style={{
       display: "flex", alignItems: "center", justifyContent: "space-between",
-      padding: "30px 56px",
+      paddingTop: 30, paddingBottom: 30,
     }}>
       <button onClick={() => setPage("home")} style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}>
         <span style={{ fontFamily: display, fontSize: 21, fontWeight: 600, color: C.ink, letterSpacing: "-0.01em" }}>
@@ -200,8 +220,8 @@ function Home({ setPage }) {
   return (
     <main>
       {/* Hero with live-feeling dashboard preview */}
-      <section style={{ padding: "64px 56px 0", maxWidth: 1140, margin: "0 auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1.05fr 0.95fr", gap: 80, alignItems: "center" }}>
+      <section className="page-pad" style={{ paddingTop: 64, paddingBottom: 0, maxWidth: 1140, margin: "0 auto" }}>
+        <div className="hero-grid">
           <div>
             <div style={{
               display: "inline-flex", alignItems: "center", gap: 8, fontFamily: mono, fontSize: 11.5, fontWeight: 500,
@@ -211,7 +231,7 @@ function Home({ setPage }) {
               ÉÉN OUTLET OF TIEN. ALTIJD GRIP.
             </div>
             <h1 style={{
-              fontFamily: display, fontSize: "clamp(40px, 5vw, 64px)", fontWeight: 600, lineHeight: 1.06,
+              fontFamily: display, fontSize: "clamp(34px, 8vw, 64px)", fontWeight: 600, lineHeight: 1.06,
               color: C.ink, margin: "0 0 28px", letterSpacing: "-0.015em",
             }}>
               Eén overzicht.<br />Elke outlet,<br />elke dag.
@@ -228,7 +248,7 @@ function Home({ setPage }) {
       </section>
 
       {/* Service register: numbered tiles, sequence is meaningful (01 live, rest planned) */}
-      <section style={{ padding: "150px 56px 140px", maxWidth: 1140, margin: "0 auto" }}>
+      <section className="page-pad" style={{ paddingTop: 110, paddingBottom: 110, maxWidth: 1140, margin: "0 auto" }}>
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 36, flexWrap: "wrap", gap: 8 }}>
           <h2 style={{ fontFamily: display, fontSize: 25, fontWeight: 600, color: C.ink, margin: 0, letterSpacing: "-0.01em" }}>
             Wat we bouwen en leveren
@@ -236,7 +256,7 @@ function Home({ setPage }) {
           <span style={{ fontFamily: mono, fontSize: 12, color: C.grey }}>04 modules</span>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20 }}>
+        <div className="services-grid">
           {SERVICES.map((s) => (
             <ServiceTile key={s.id} service={s} onClick={() => setPage(s.id)} />
           ))}
@@ -302,35 +322,35 @@ function ServiceTile({ service, onClick }) {
       onClick={onClick}
       disabled={!clickable}
       style={{
-        textAlign: "left", padding: "30px 26px", background: C.paperSoft,
+        textAlign: "left", padding: "24px 20px", background: C.paperSoft,
         border: `1px solid ${clickable ? "rgba(61,92,82,0.18)" : C.border}`, borderRadius: 14,
         cursor: clickable ? "pointer" : "default",
-        display: "flex", flexDirection: "column", minHeight: 210,
+        display: "flex", flexDirection: "column", minHeight: 220,
         boxShadow: clickable
           ? "0 1px 2px rgba(19,33,31,0.04), 0 8px 20px -10px rgba(19,33,31,0.12)"
           : "0 1px 2px rgba(19,33,31,0.03)",
       }}
     >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-        <span style={{ fontFamily: display, fontSize: 15, color: C.grey, fontWeight: 500 }}>{code}</span>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 6 }}>
+        <span style={{ fontFamily: display, fontSize: 14, color: C.grey, fontWeight: 500 }}>{code}</span>
         <span style={{
-          fontFamily: mono, fontSize: 9.5, fontWeight: 500, letterSpacing: "0.05em", textTransform: "uppercase",
+          fontFamily: mono, fontSize: 9, fontWeight: 500, letterSpacing: "0.05em", textTransform: "uppercase",
           color: status === "live" ? C.green : C.grey,
-          padding: "4px 9px", borderRadius: 99,
+          padding: "3px 8px", borderRadius: 99,
           background: status === "live" ? C.greenSoft : "rgba(142,135,111,0.12)",
         }}>
           {status === "live" ? "Actief" : "Gepland"}
         </span>
       </div>
-      <div style={{ fontFamily: mono, fontSize: 11, color: C.terracotta, fontWeight: 500, letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 8 }}>
+      <div style={{ fontFamily: mono, fontSize: 10.5, color: C.terracotta, fontWeight: 500, letterSpacing: "0.05em", textTransform: "uppercase", marginBottom: 7 }}>
         {category}
       </div>
-      <div style={{ fontFamily: display, fontSize: 21, fontWeight: 600, color: C.ink, marginBottom: 12, letterSpacing: "-0.005em" }}>
+      <div style={{ fontFamily: display, fontSize: 18, fontWeight: 600, color: C.ink, marginBottom: 10, letterSpacing: "-0.005em", lineHeight: 1.2 }}>
         {name}
       </div>
-      <div style={{ fontSize: 14, color: "#5F594C", lineHeight: 1.6, flex: 1 }}>{line}</div>
+      <div style={{ fontSize: 13, color: "#5F594C", lineHeight: 1.55, flex: 1 }}>{line}</div>
       {clickable && (
-        <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, color: C.ink, marginTop: 18 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12.5, fontWeight: 600, color: C.ink, marginTop: 16 }}>
           Bekijken <ArrowRight size={13} />
         </div>
       )}
@@ -343,13 +363,13 @@ function ServiceTile({ service, onClick }) {
 // ---------------------------------------------------------------------------
 function ControlInfo({ onBack, onEnter }) {
   return (
-    <main style={{ maxWidth: 1140, margin: "0 auto", padding: "0 56px 140px" }}>
+    <main className="page-pad" style={{ maxWidth: 1140, margin: "0 auto", paddingBottom: 140 }}>
       <div style={{ padding: "36px 0 0" }}>
         <BackLink onClick={onBack} label="Alle modules" />
       </div>
 
       {/* Header block */}
-      <div style={{ display: "grid", gridTemplateColumns: "1.05fr 0.95fr", gap: 80, alignItems: "center", padding: "32px 0 88px" }}>
+      <div className="hero-grid" style={{ paddingTop: 32, paddingBottom: 88 }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
             <span style={{ width: 16, height: 1, background: C.grey, display: "inline-block" }} />
@@ -391,10 +411,9 @@ function ControlInfo({ onBack, onEnter }) {
       </div>
 
       {/* CTA */}
-      <div style={{
+      <div className="cta-row" style={{
         background: `linear-gradient(165deg, ${C.panelLight}, ${C.panel})`,
-        borderRadius: 16, padding: "44px 48px", display: "flex",
-        flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 24, marginTop: 72,
+        borderRadius: 16, padding: "36px 32px", marginTop: 56,
         boxShadow: "0 20px 50px -20px rgba(19,33,31,0.3)",
         border: "1px solid rgba(255,255,255,0.06)",
       }}>
@@ -420,27 +439,26 @@ function ControlInfo({ onBack, onEnter }) {
 
 function FeatureRow({ num, title, text, icon: Icon, last }) {
   return (
-    <div className="feature-row" style={{
-      display: "grid", gridTemplateColumns: "auto 1fr", gap: 40, alignItems: "center",
-      padding: "36px 8px", borderBottom: last ? "none" : `1px solid ${C.border}`,
+    <div className="feature-row feature-row-inner" style={{
+      padding: "32px 8px", borderBottom: last ? "none" : `1px solid ${C.border}`,
       borderRadius: 12,
     }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-        <span style={{ fontFamily: display, fontSize: 48, fontWeight: 600, color: "rgba(19,33,31,0.13)", lineHeight: 1, width: 56 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <span style={{ fontFamily: display, fontSize: 40, fontWeight: 600, color: "rgba(19,33,31,0.13)", lineHeight: 1, width: 48 }}>
           {num}
         </span>
         <div style={{
-          width: 46, height: 46, borderRadius: 12, background: C.greenSoft,
+          width: 44, height: 44, borderRadius: 12, background: C.greenSoft,
           display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
         }}>
-          <Icon size={20} color={C.green} />
+          <Icon size={19} color={C.green} />
         </div>
       </div>
       <div>
-        <div style={{ fontFamily: display, fontSize: 21, fontWeight: 600, color: C.ink, marginBottom: 9, letterSpacing: "-0.005em" }}>
+        <div style={{ fontFamily: display, fontSize: 19, fontWeight: 600, color: C.ink, marginBottom: 8, letterSpacing: "-0.005em" }}>
           {title}
         </div>
-        <p style={{ fontSize: 15, lineHeight: 1.7, color: "#5F594C", margin: 0, maxWidth: 460 }}>{text}</p>
+        <p style={{ fontSize: 14.5, lineHeight: 1.65, color: "#5F594C", margin: 0, maxWidth: 460 }}>{text}</p>
       </div>
     </div>
   );
@@ -451,12 +469,12 @@ function FeatureRow({ num, title, text, icon: Icon, last }) {
 // ---------------------------------------------------------------------------
 function VisitInfo({ onBack, setPage }) {
   return (
-    <main style={{ maxWidth: 1140, margin: "0 auto", padding: "0 56px 140px" }}>
+    <main className="page-pad" style={{ maxWidth: 1140, margin: "0 auto", paddingBottom: 140 }}>
       <div style={{ padding: "36px 0 0" }}>
         <BackLink onClick={onBack} label="Alle modules" />
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1.05fr 0.95fr", gap: 80, alignItems: "center", padding: "32px 0 64px" }}>
+      <div className="hero-grid" style={{ paddingTop: 32, paddingBottom: 64 }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
             <span style={{ width: 16, height: 1, background: C.terracotta, display: "inline-block" }} />
@@ -576,7 +594,7 @@ function VisitScorePreview() {
 // ---------------------------------------------------------------------------
 function AdviesInfo({ onBack, setPage }) {
   return (
-    <main style={{ maxWidth: 1140, margin: "0 auto", padding: "0 56px 140px" }}>
+    <main className="page-pad" style={{ maxWidth: 1140, margin: "0 auto", paddingBottom: 140 }}>
       <div style={{ padding: "36px 0 0" }}>
         <BackLink onClick={onBack} label="Alle modules" />
       </div>
@@ -623,7 +641,7 @@ function AdviesInfo({ onBack, setPage }) {
 // ---------------------------------------------------------------------------
 function InterimInfo({ onBack, setPage }) {
   return (
-    <main style={{ maxWidth: 1140, margin: "0 auto", padding: "0 56px 140px" }}>
+    <main className="page-pad" style={{ maxWidth: 1140, margin: "0 auto", paddingBottom: 140 }}>
       <div style={{ padding: "36px 0 0" }}>
         <BackLink onClick={onBack} label="Alle modules" />
       </div>
@@ -667,10 +685,9 @@ function InterimInfo({ onBack, setPage }) {
 
 function ContactCTA({ title, subtitle, setPage }) {
   return (
-    <div style={{
+    <div className="cta-row" style={{
       background: `linear-gradient(165deg, ${C.panelLight}, ${C.panel})`,
-      borderRadius: 16, padding: "44px 48px", display: "flex",
-      flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 24, marginTop: 72,
+      borderRadius: 16, padding: "36px 32px", marginTop: 56,
       boxShadow: "0 20px 50px -20px rgba(19,33,31,0.3)",
       border: "1px solid rgba(255,255,255,0.06)",
     }}>
@@ -729,7 +746,7 @@ function ContactPage({ onBack }) {
 
   if (status === "sent") {
     return (
-      <main style={{ maxWidth: 560, margin: "0 auto", padding: "140px 56px 160px", textAlign: "center" }}>
+      <main className="page-pad" style={{ maxWidth: 560, margin: "0 auto", paddingTop: 140, paddingBottom: 160, textAlign: "center" }}>
         <div style={{
           width: 52, height: 52, borderRadius: 14, background: C.greenSoft, margin: "0 auto 28px",
           display: "flex", alignItems: "center", justifyContent: "center",
@@ -748,7 +765,7 @@ function ContactPage({ onBack }) {
   }
 
   return (
-    <main style={{ maxWidth: 640, margin: "0 auto", padding: "0 56px 140px" }}>
+    <main className="page-pad" style={{ maxWidth: 640, margin: "0 auto", paddingBottom: 140 }}>
       <div style={{ padding: "36px 0 0" }}>
         <BackLink onClick={onBack} label="Terug" />
       </div>
@@ -815,7 +832,7 @@ const inputStyle = {
 
 function ComingSoon({ onBack, setPage }) {
   return (
-    <main style={{ maxWidth: 580, margin: "0 auto", padding: "140px 56px 160px", textAlign: "center" }}>
+    <main className="page-pad" style={{ maxWidth: 580, margin: "0 auto", paddingTop: 110, paddingBottom: 140, textAlign: "center" }}>
       <div style={{
         width: 56, height: 56, borderRadius: 14, background: `linear-gradient(165deg, ${C.panelLight}, ${C.panel})`,
         margin: "0 auto 32px", display: "flex", alignItems: "center", justifyContent: "center",
@@ -859,8 +876,8 @@ function BackLink({ onClick, label }) {
 
 function SiteFooter() {
   return (
-    <footer style={{
-      borderTop: `1px solid ${C.border}`, padding: "32px 56px", display: "flex",
+    <footer className="page-pad" style={{
+      borderTop: `1px solid ${C.border}`, paddingTop: 32, paddingBottom: 32, display: "flex",
       justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12,
     }}>
       <div style={{ fontFamily: mono, fontSize: 12, color: C.grey }}>
@@ -879,15 +896,15 @@ function SiteFooter() {
 function Teaser() {
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      <header style={{ padding: "30px 56px" }}>
+      <header className="page-pad" style={{ paddingTop: 30, paddingBottom: 30 }}>
         <span style={{ fontFamily: display, fontSize: 21, fontWeight: 600, color: C.ink, letterSpacing: "-0.01em" }}>
           MVDiensten
         </span>
       </header>
 
-      <main style={{
+      <main className="page-pad" style={{
         flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
-        justifyContent: "center", textAlign: "center", padding: "40px 56px",
+        justifyContent: "center", textAlign: "center", paddingTop: 40, paddingBottom: 40,
       }}>
         <div style={{
           width: 52, height: 52, borderRadius: 14, background: `linear-gradient(165deg, ${C.panelLight}, ${C.panel})`,
@@ -904,7 +921,7 @@ function Teaser() {
           BINNENKORT ONLINE
         </div>
         <h1 style={{
-          fontFamily: display, fontSize: "clamp(32px, 4.5vw, 48px)", fontWeight: 600, lineHeight: 1.1,
+          fontFamily: display, fontSize: "clamp(30px, 8vw, 48px)", fontWeight: 600, lineHeight: 1.1,
           color: C.ink, margin: "0 0 18px", letterSpacing: "-0.015em", maxWidth: 640,
         }}>
           Eén overzicht. Elke outlet, elke dag.
@@ -915,7 +932,7 @@ function Teaser() {
         </p>
       </main>
 
-      <footer style={{ padding: "28px 56px", textAlign: "center" }}>
+      <footer className="page-pad" style={{ paddingTop: 28, paddingBottom: 28, textAlign: "center" }}>
         <div style={{ fontFamily: mono, fontSize: 12, color: C.grey }}>
           info@mvdiensten.nl
         </div>
